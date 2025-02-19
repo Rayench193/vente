@@ -12,9 +12,9 @@
         {{ form_start(registrationForm) }}
             {{ form_widget(registrationForm.email,{'attr':{'class':'form form-control','placeholder':'email'}}) }}
             <br>
-            {{ form_widget(registrationForm.firstName, {'attr':{'class':'form form-control','placeholder':'Nom'}}) }}
+            {{ form_widget(registrationForm.firstName, {'attr':{'class':'form form-control','placeholder':'Prénom'}}) }}
             <br>
-            {{ form_widget(registrationForm.lastName, {'attr':{'class':'form form-control','placeholder':'Prénom'}}) }}
+            {{ form_widget(registrationForm.lastName, {'attr':{'class':'form form-control','placeholder':'Nom'}}) }}
             <br>
             
             {{ form_widget(registrationForm.plainPassword, {'attr':{'class':'form form-control','placeholder':'Mot de passe'}} ,{
