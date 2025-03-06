@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello OrderController!{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+    <div class="col-8">
+        <h1>Checkout</h1>
+        {{form_start(form)}} 
+            {{form_widget(form)}} <br><br>
+            <input type="submit" value="continuer" class="btn btn-outline-primary" >
+        {{form_end(form)}}
+    </div>
+    <div class="col-4">
+        <br><br>
+        <span>Montant à payer :</span> <br>
+        <h2> <span id="card-price">{{total}}</span>
+             $</h2> <br>
+        <span>Frais de livraison :</span><br>
+        <h2 >
+            <span id="shippingCost">7</span>$
+        </h2><br>
+        <span>Montant à payer :</span><br>
+        <h2>
+            <span class="total-price"></span>$
+        </h2>
+
+    </div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+ $(document).ready(function(){
+    const citySelctor = $('#order_city') ; 
+    const cityValue = citySelctor.val()
+    const url = `http://127.0.0.1:8000/city/${cityValue}/shipping/cost`; 
+
+    function ajaxRequest(url){
+    $.ajax ({
+        url:url, 
+        type:'GET' , 
+        success : function(response){
+            const newResponse = JSON.parse(response)
+            if (parseInt(newResponse.status)==200){
+             $("#shippingCost").text(newResponse.content)
+
+             const cardPrice =parseInt($("#card-price").text()); 
+             const shippingCost = parseInt($('#shippingCost').text());
+
+             $('.total-price').text(cardPrice+shippingCost);
+            }
+        }, 
+        error : function(xhr, status,error){
+
+        }
+    })
+    }
+
+    ajaxRequest(url)
+    citySelctor.on('change',function(){
+        const urlUpdate = `http://127.0.0.1:8000/city/${$(this).val()}/shipping/cost`;
+        ajaxRequest(urlUpdate)
+    })
+ })
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CartController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <br>
+        {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+        {% endfor %}
+        <h1>Le Panier</h1>
+        <table class="table table-bordered">
+            <tr>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+                <th>Image</th>
+                <th>Total price </th>
+                <th>Action</th>
+            </tr>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price }}</td>
+                    <td>
+                        
+                        <a href="{{ path('app_cart_decrease', {'id': item.product.id}) }}" class="btn btn-sm btn-danger">-</a>
+                        {{ item.quantity }}
+                        <a href="{{ path('app_cart_increase', {'id': item.product.id}) }}" class="btn btn-sm btn-primary" >+</a>
+                    </td>
+                    <td><img src="{{ asset('uploads/images/' ~ item.product.image) }}" style="width:50px;"></td>
+                    <td>{{ item.product.price * item.quantity }}$</td>
+                    <td>
+                        <a href="{{ path('app_cart_product_remove', {'id': item.product.id}) }}" class="text-danger text-decoration-none">
+                            Supprimer
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Votre panier est vide</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br><br>
+        {% if total > 0 %}
+            <h2 class="fw-bold">Total: {{ total }}$</h2>
+        {% endif %}
+        <br><br>
+        <div class="row">
+            <a href="{{ path('app_home') }}" class="btn btn-success col-2 m-lg-1">Continuer votre achat</a>
+            <a href="" class="btn btn-primary col-2 m-lg-1">Valider la commande</a>
+            <a href="{{ path('app_cart_remove') }}" class="btn btn-danger col-2 m-lg-1">Supprimer le panier</a>
+        </div>
+    </div>
+{% endblock %}

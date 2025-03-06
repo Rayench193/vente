@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Home Controle{% endblock %}
+
+{% block body %}
+<main class="book-details">
+  <div class="book-images">
+    <img src="{{ asset ('uploads/images/' ~ product.image) }}" alt="Book Cover" class="main-image">
+  </div>
+
+  <div class="book-info">
+   <h2 class="book-show-title">{{product.name}}</h2>
+
+    <p class="author"> Par l'auteur : </p>
+    <hr>
+    <p class="price">Prix : {{product.price}} $</p>
+    {% if product.stock > 0  %}
+    <p class="stock">En stock</p>
+    {% else %}
+    <p class="non-stock">Repture de stock</p>
+    {% endif %}
+    <hr>
+    <p class="description">
+      <h2>Resumé: </h2>
+      <p>
+      Tu pourras apprendre dans ce livre deux façons différentes de penser à l'argent.
+        L'auteur partage des idées importantes sur la gestion de l'argent en montrant comment ses deux pères pensaient à l'argent. L'un des pères travaillait dur et pensait que l'obtention d'une bonne éducation et la sécurité de l'emploi étaient les choses les plus importantes. L'autre père était un chef d'entreprise qui ne pensait pas que l'éducation formelle était aussi importante que l'apprentissage de l'argent. 
+      </p>
+
+
+
+
+
+    <a href="{{path('app_cart_new',{'id':product.id})}}" class="add-to-cart">Ajouter au pannier</a>
+  </div>
+{% endblock %}
