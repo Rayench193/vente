@@ -2,35 +2,24 @@
 
 namespace App\Repository;
 
-use App\Entity\Order;
+use App\Entity\OrderProducts;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Order>
+ * @extends ServiceEntityRepository<OrderProducts>
  */
-class OrderRepository extends ServiceEntityRepository
+class OrderProductsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Order::class);
+        parent::__construct($registry, OrderProducts::class);
     }
 
-    public function findByFirstName(int $id): array
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.id LIKE :id')
-            ->setParameter('id', '%' . $id . '%')
-            ->getQuery()
-            ->getResult();
-    }
-
-
-// src/Repository/OrderRepository.php
-
+    
 
     //    /**
-    //     * @return Order[] Returns an array of Order objects
+    //     * @return OrderProducts[] Returns an array of OrderProducts objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -44,7 +33,7 @@ class OrderRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Order
+    //    public function findOneBySomeField($value): ?OrderProducts
     //    {
     //        return $this->createQueryBuilder('o')
     //            ->andWhere('o.exampleField = :val')

@@ -36,7 +36,9 @@
                         <a href="{{ path('app_cart_product_remove', {'id': item.product.id}) }}" class="text-danger text-decoration-none">
                             Supprimer
                         </a>
+                        
                     </td>
+                    
                 </tr>
             {% else %}
                 <tr>
@@ -51,7 +53,7 @@
         <br><br>
         <div class="row">
             <a href="{{ path('app_home') }}" class="btn btn-success col-2 m-lg-1">Continuer votre achat</a>
-            <a href="" class="btn btn-primary col-2 m-lg-1">Valider la commande</a>
+            <a href="{{path('app_order')}}" class="btn btn-primary col-2 m-lg-1">Valider la commande</a>
             <a href="{{ path('app_cart_remove') }}" class="btn btn-danger col-2 m-lg-1">Supprimer le panier</a>
         </div>
     </div>

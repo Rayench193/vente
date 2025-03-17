@@ -44,4 +44,24 @@ final class UserController extends AbstractController
         $this->addFlash('danger','Votre utilisateur a été supprimé');
         return $this->redirectToRoute('app_user');
     }
+
+    #[Route('/user/{id}/orders', name: 'user_orders')]
+    public function userOrders(int $id, UserRepository $userRepository): Response
+    {
+        // Récupérer l'utilisateur par son ID
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé');
+        }
+
+        // Récupérer les commandes de l'utilisateur
+        $userOrders = $user->getUserOrders();
+
+        // Passer les commandes à la vue
+        return $this->render('user/orders.html.twig', [
+            'user' => $user,
+            'userOrders' => $userOrders,
+        ]);
+    }
 }

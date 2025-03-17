@@ -22,7 +22,9 @@
                     <td>{{category.name}}</td>
                     <td>
                         <a class="btn btn-outline-primary" href="{{path('app_category_update',{'id':category.id})}}">Modifier</a> 
-                        <a onclick="return confirm('voulez vous vraiment Supprimer cette categorie')" class="btn btn-danger" href ="{{path('app_category_delete',{'id':category.id})}}"">Supprimer</a>
+                        <a href="{{path('app_category_delete',{'id':category.id})}}" onclick="return confirm('voulez vous vraiment Supprimer cette categorie')">
+                            <i class="fa-solid fa-trash" style="color: #ff0000; font-size:20px ; margin:5px"></i>
+                        </a>
                     </td>
                 </tr>
                 {% else %}Aucune Categories affiché pour l'instant

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="container">
+    <h1>Les Commandes: </h1>
+    {% include "layouts/flash_msg.html.twig" %}
+    <form method="get" action="{{ path('app_orders_show') }}" class="mb-7">
+        <div class="row g-3 align-items-center">
+            <input type="number" name="search_id" class="form-control" placeholder="Rechercher par ID..." value="{{ app.request.query.get('search_id') }}">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+        </div>
+    </form>
+        <table class="table ">
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Téléphone</th>
+                <th>Ville</th>
+                <th>Adresse</th>
+                <th>Prix Total</th>
+                <th>Action</th>
+            </tr>
+
+            {% for order in orders %}
+
+            <tr>
+                <td>{{order.id}}</td>
+                <td>{{order.firstName}}</td>
+                <td>{{order.lastName}}</td>
+                <td>{{order.phone}}</td>
+                <td>{{order.city.name}}</td>
+                <td>{{order.adresse}}</td>
+                <td>{{order.totalPrice + order.city.shippingCost}} $</td>
+                <td>
+                    <a class="btn btn-primary" href="{{path('app_order_show',{'id':order.id})}}">show</a>
+                </td>
+            </tr>
+
+    {% endfor %}
+</table>
+
+</div>
+
+{% endblock %}

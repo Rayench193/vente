@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class=container>
+        <h2>Commande n: {{order.id}}</h2>
+        {% if order.isCompleted == true %}
+        <h4 class="text-danger">Commande livreé: {{order.createAt|date}}</h4>
+     {%else%} 
+     <h4 class="text-success">Commande non livreé: {{order.createAt|date}}</h4>
+     {%endif%}
+     <h5>Informations de client </h5>
+        <table class="table table-bordered">
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Téléphone</th>
+                <th>Adresse</th>
+                <th>Ville</th>
+            </tr>
+            <tr>
+                <td>{{order.firstName}}</td>
+                <td>{{order.lastName}}</td>
+                <td>{{order.phone}}</td>
+                <td>{{order.adresse}}</td>
+                <td>{{order.city.name}}</td>
+            </tr>
+        </table>
+        
+        <h5>Corpos de la commande</h5>
+        <table class="table table-bordered">
+            <tr>
+                <th>Image de produit</th>
+                <th>Nom du produits</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Prix Total</th>
+            </tr>
+            <tr>
+                {% for product in order.orderProducts %} 
+                    <tr>
+                        <td> <img src="{{ asset('uploads/images/' ~ product.product.image) }}" style="width:40px;"> </td>
+                        <td>{{product.product.name}}</td>
+                        <td>{{product.product.price}}$</td>
+                        <td>{{product.qte}}</td>
+                        <td>{{product.product.price*product.qte}}$</td>
+                    </tr>
+                {% endfor %}
+            </tr>
+        </table>
+        <span>Prix de livraison: {{order.city.shippingCost}}$</span>
+        <h3>Total à payer: {{order.totalPrice +order.city.shippingCost }}$ <br></h3>
+        {% if order.isCompleted == false %}
+        <a href="{{path('app_orders_is_completed_update',{'id':order.id})}}" class="btn btn-outline-primary col-2 m-lg-1">Marquer comme livreé</a>
+        <a onclick="return confirm('voulez vous vraiment Supprimer cette commande')" href="{{path('app_orders_remove' , {'id':order.id})}}" class="btn btn-outline-danger col-2 m-lg-1">Supprimer</a>
+    {% else %}
+        <a onclick="return confirm('voulez vous vraiment Supprimer cette commande')" href="{{path('app_orders_remove' , {'id':order.id})}}" class="btn btn-outline-danger col-2 m-lg-1">Supprimer</a>
+{% endif %}
+
+    </div>
+{% endblock %}

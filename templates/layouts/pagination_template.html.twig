@@ -1,0 +1,33 @@
+{%if pageCount > 1%}
+<nav aria-label ="...">
+    <ul class="pagination">
+        {% if previous is defined %}
+            <li class="page-item">
+                <a class="page-link" href ="{{path(route,query|merge({(pageParameterName):previous}))}}">Previous</a>
+            </li>
+        {% endif %}
+        
+        {% for page in  pagesInRange %} 
+            {% if page != current  %}
+            <li class="page-item active" aria-current="page">
+                <a style="border-radius: 50%;  border:none" class="page-link " href="{{path(route,query|merge({(pageParameterName):page }))}}">{{page}}</a>
+            </li>
+            {% else %}
+            <li class="page-item active" aria-current="page">
+                <a style="border-radius: 50%; background-color:orangered; border:none; color:white" class="page-link disabled" href="{{path(route,query|merge({(pageParameterName):page }))}}">{{page}}</a>
+            </li>
+            {%endif%}
+        {% endfor %}
+     {# <li class="page-item"><a class="page-link" href="#">1</a></li>#}
+     {# <li class="page-item active">#}
+      {# <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a> #}  
+     {#  </li> #}
+     {# <li class="page-item"><a class="page-link" href="#">3</a></li> #} 
+      {% if next is defined %}
+      <li class="page-item">
+        <a class="page-link" href="{{path(route,query|merge({(pageParameterName):next}))}}">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}

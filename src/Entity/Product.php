@@ -37,12 +37,19 @@ class Product
     #[ORM\Column]
     private ?int $stock = null;
 
+    /**
+     * @var Collection<int, OrderProducts>
+     */
+    #[ORM\OneToMany(targetEntity: OrderProducts::class, mappedBy: 'product')]
+    private Collection $orderProducts;
+
 
     #[ORM\Column(length: 255)]
 
     public function __construct()
     {
         $this->subCategories = new ArrayCollection();
+        $this->orderProducts = new ArrayCollection();
 
       
     }
@@ -132,6 +139,36 @@ class Product
     public function setStock(int $stock): static
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderProducts>
+     */
+    public function getOrderProducts(): Collection
+    {
+        return $this->orderProducts;
+    }
+
+    public function addOrderProduct(OrderProducts $orderProduct): static
+    {
+        if (!$this->orderProducts->contains($orderProduct)) {
+            $this->orderProducts->add($orderProduct);
+            $orderProduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderProduct(OrderProducts $orderProduct): static
+    {
+        if ($this->orderProducts->removeElement($orderProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($orderProduct->getProduct() === $this) {
+                $orderProduct->setProduct(null);
+            }
+        }
 
         return $this;
     }

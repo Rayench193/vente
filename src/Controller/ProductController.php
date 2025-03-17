@@ -8,6 +8,7 @@ use App\Form\AddProductHistoryType;
 use App\Form\ProductType;
 use \App\Form\ProductUpdateType;
 use App\Repository\AddProductHistoryRepository;
+use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route as AnnotationRoute;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -28,6 +30,7 @@ final class ProductController extends AbstractController
     #[Route(name: 'app_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
+        
         return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
         ]);
@@ -59,7 +62,6 @@ final class ProductController extends AbstractController
             'form' => $form,
         ]);
     }
-
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
@@ -97,4 +99,6 @@ final class ProductController extends AbstractController
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
 
+
+    
 }

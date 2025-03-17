@@ -6,8 +6,11 @@ use App\Entity\Product;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use App\Repository\SubCategoryRepository;
+use Doctrine\DBAL\Query\Limit;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -16,13 +19,18 @@ final class HomeController extends AbstractController
 
 
     #[Route('/', name: 'app_home' ,  methods:['GET'])]
-    public function index(ProductRepository $productRepository , CategoryRepository $categoryRepository): Response
+    public function index(ProductRepository $productRepository , CategoryRepository $categoryRepository, Request $request , PaginatorInterface $paginator): Response
     {
 
-        $this->addFlash('danger','Ce produit est epuiser ');
-
+        $data = $productRepository->findBy([],['id'=> 'ASC']);
+        $products = $paginator->paginate(
+            $data,
+            $request->query->getInt('page',1),
+            8,
+        );
+    
         return $this->render('home/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $products,
             'categories'=>$categoryRepository->findAll(),
         ]);
     }
