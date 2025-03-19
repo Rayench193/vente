@@ -32,6 +32,7 @@ final class CartController extends AbstractController
         else {
             $cart[$id]=1;
         }
+        
         $session->set('cart', $cart);
         $this->addFlash('success', 'Le produit a été ajouté au panier avec succès.');
          return $this->redirectToRoute('app_cart');

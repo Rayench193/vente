@@ -12,13 +12,13 @@
           <img src="{{ asset ('uploads/images/' ~ product.image) }}" class="book-cover">
         </div>
         <a  style="text-decoration : none; " href="{{path('app_home_product_show', {'id':product.id}) }}"><h2 class="book-title">{{product.name}}</h2></a>
-        <p class="book-author">by F. Scott Fitzgerald</p>
+        <p class="book-author">{{product.auteur}}</p>
         <p class="book-price">${{product.price}}</p>
         {% if product.stock > 0 %} 
         <p class="stock">En Stock</p>
         <a href ="{{path('app_cart_new',{'id':product.id})}}" class="cta-button">Ajouter au pannier</a>
           {% else  %}
-          <p class="non-stock">Repture de stock</p>
+          <p class="non-stock">Rupture de stock</p>
           <a href ="#" class="cta-button disabled">Ajouter au pannier</a>
         {% endif %}
       </div>

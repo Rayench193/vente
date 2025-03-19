@@ -6,23 +6,25 @@
 <div class="container">
     <h1>Product</h1>
 
-    <table class="table">
+    <table class="table table-bordered">
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ product.id }}</td>
-            </tr>
-            <tr>
+                <th>Image</th>
                 <th>Name</th>
-                <td>{{ product.name }}</td>
-            </tr>
-            <tr>
+                <th>Auteur</th>
                 <th>Descreption</th>
-                <td>{{ product.descreption }}</td>
+                <th>Price</th>
+
             </tr>
             <tr>
-                <th>Price</th>
+                <td>{{ product.id }}</td>
+                <td><img src="{{ asset('uploads/images/' ~ product.image) }}" style="width:50px;"></td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.auteur }}</td>
+                <td>{{ product.descreption }}</td>
                 <td>{{ product.price }}</td>
+
             </tr>
         </tbody>
     </table>

@@ -21,9 +21,11 @@
                     <td>{{category.id}}</td>
                     <td>{{category.name}}</td>
                     <td>
-                        <a class="btn btn-outline-primary" href="{{path('app_category_update',{'id':category.id})}}">Modifier</a> 
-                        <a href="{{path('app_category_delete',{'id':category.id})}}" onclick="return confirm('voulez vous vraiment Supprimer cette categorie')">
-                            <i class="fa-solid fa-trash" style="color: #ff0000; font-size:20px ; margin:5px"></i>
+                        <a class="btn btn-outline-primary" href="{{path('app_category_update',{'id':category.id})}}">
+                            Modifier <i class="fa-solid fa-pen"></i>
+                        </a> 
+                        <a href="{{path('app_category_delete',{'id':category.id})}}" onclick="return confirm('voulez vous vraiment Supprimer cette categorie')" class="btn btn-danger">
+                          Supprimer  <i class="fa-solid fa-trash" style="font-size:15px ; margin:5px"></i>
                         </a>
                     </td>
                 </tr>

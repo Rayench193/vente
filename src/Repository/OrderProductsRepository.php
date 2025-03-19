@@ -16,6 +16,18 @@ class OrderProductsRepository extends ServiceEntityRepository
         parent::__construct($registry, OrderProducts::class);
     }
 
+
+    public function findMostPurchasedProducts(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('op')
+            ->select('p.id, p.name, SUM(op.qte) as totalQuantity')
+            ->join('op.product', 'p')
+            ->groupBy('p.id')
+            ->orderBy('totalQuantity', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
     
 
     //    /**

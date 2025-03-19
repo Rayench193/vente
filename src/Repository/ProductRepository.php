@@ -23,7 +23,7 @@ class ProductRepository extends ServiceEntityRepository
     public function searchEngine(string $query) {
         return $this->createQueryBuilder('p')
         ->where('p.name LIKE :query')
-        ->orWhere('p.descreption LIKE :query')
+        ->orWhere('p.auteur LIKE :query')
         ->setParameter('query','%'. $query.'%')
         ->getQuery()
         ->getResult();

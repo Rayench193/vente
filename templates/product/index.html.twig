@@ -12,11 +12,11 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>Descreption</th>
-                <th>Price</th>
+                <th>Nom</th>
+                <th>Auteur</th>
+                <th>Prix</th>
                 <th>Stock</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -24,12 +24,17 @@
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
-                <td>{{ product.descreption | slice(0,60) }}...</td>
+                <td>{{ product.auteur }}</td>
+                
                 <td>{{ product.price }}</td>
                 <td>{{ product.stock }}</td>
                     <td>
-                    <a class="btn btn-primary" href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
-                    <a class="btn btn-success" href ="{{path('app_product_edit', {'id': product.id})}}">edit</a>
+                    <a class="btn btn-primary" href="{{ path('app_product_show', {'id': product.id}) }}">
+                        Voir les détails <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a class="btn btn-success" href ="{{path('app_product_edit', {'id': product.id})}}">
+                        Modifier <i class="fa-solid fa-pen"></i>
+                    </a>
                 </td>
             </tr>
         {% else %}

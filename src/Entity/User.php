@@ -42,20 +42,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
-
-    private Collection $userOrders;
-
     /**
-     * @var Collection<int, UserProduct>
+     * @var Collection<int, Order>
      */
-    #[ORM\OneToMany(targetEntity: UserProduct::class, mappedBy: 'user')]
-    private Collection $userProducts;
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'user')]
+    private Collection $orders;
 
     public function __construct()
     {
-        $this->userOrders = new ArrayCollection();
-        $this->userProducts = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
+
+
+   
+
 
     public function getId(): ?int
     {
@@ -157,34 +157,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, UserProduct>
+     * @return Collection<int, Order>
      */
-    public function getUserProducts(): Collection
+    public function getOrders(): Collection
     {
-        return $this->userProducts;
+        return $this->orders;
     }
 
-    public function addUserProduct(UserProduct $userProduct): static
+    public function addOrder(Order $order): static
     {
-        if (!$this->userProducts->contains($userProduct)) {
-            $this->userProducts->add($userProduct);
-            $userProduct->setUser($this);
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeUserProduct(UserProduct $userProduct): static
+    public function removeOrder(Order $order): static
     {
-        if ($this->userProducts->removeElement($userProduct)) {
+        if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
-            if ($userProduct->getUser() === $this) {
-                $userProduct->setUser(null);
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
             }
         }
 
         return $this;
     }
+
+
+
 
 
     

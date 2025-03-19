@@ -20,7 +20,7 @@
 .navbar-custom {
     background-color: #009897;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-
+    
 }
 .nav-link {
     margin-right: 1rem;
@@ -133,8 +133,31 @@
   justify-content: space-around;
  }
 
+ .dashboard-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
 
+.stat {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 30%;
+}
+
+.stat h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.stat p {
+  font-size: 2em;
+  font-weight: bold;
+}
  
+
 
   @media screen and (max-width:992px) {
    .product-grid {

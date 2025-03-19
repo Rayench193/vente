@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de Bord{% endblock %}
+
+{% block body %}
+
+<style>
+    table {
+        width: 50%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      
+      table th, table td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+      
+      table th {
+        background-color: #f4f4f4;
+      }
+</style>
+
+
+<div class="container">
+    <h1>Tableau de Bord: </h1>
+
+    <div class="dashboard-stats">
+        <div class="stat">
+            <h2>Nombre d'Utilisateurs</h2>
+            <p>{{ userCount }}</p>
+        </div>
+
+        <div class="stat">
+            <h2>Nombre de Produits</h2>
+            <p>{{ productCount }}</p>
+        </div>
+
+        <div class="stat">
+            <h2>Nombre de Commandes</h2>
+            <p>{{ orderCount }}</p>
+        </div>
+    </div>
+    <br>
+
+
+    <h2>Produits les plus achetés : </h2>
+    <canvas id="mostPurchasedProductsChart" width="300" height="150"></canvas>
+
+
+    
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('mostPurchasedProductsChart').getContext('2d');
+            const mostPurchasedProductsChart = new Chart(ctx, {
+                type: 'bar', // Type de graphique (courbe)
+                data: {
+                    labels: {{ productNames|json_encode|raw }}, // Noms des produits
+                    datasets: [{
+                        label: 'Quantité achetée',
+                        data: {{ productQuantities|json_encode|raw }}, // Quantités achetées
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

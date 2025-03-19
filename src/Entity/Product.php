@@ -43,6 +43,9 @@ class Product
     #[ORM\OneToMany(targetEntity: OrderProducts::class, mappedBy: 'product')]
     private Collection $orderProducts;
 
+    #[ORM\Column(length: 255)]
+    private ?string $auteur = null;
+
 
     #[ORM\Column(length: 255)]
 
@@ -169,6 +172,18 @@ class Product
                 $orderProduct->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAuteur(): ?string
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(string $auteur): static
+    {
+        $this->auteur = $auteur;
 
         return $this;
     }

@@ -21,8 +21,12 @@
                 <td>{{sub_category.name }}</td>
                 <td>{{sub_category.category}}</td>
                 <td>
-                    <a  class="btn btn-outline-primary" href="{{ path('app_sub_category_show', {'id': sub_category.id}) }}">show</a>
-                    <a  class="btn btn-danger" href="{{ path('app_sub_category_edit', {'id': sub_category.id}) }}">edit</a>
+                    <a  class="btn btn-success" href="{{ path('app_sub_category_show', {'id': sub_category.id}) }}">
+                        Voir les détails <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a  class="btn btn-primary" href="{{ path('app_sub_category_edit', {'id': sub_category.id}) }}">
+                        edit <i class="fa-solid fa-pen"></i>
+                    </a> 
                 </td>
             </tr>
         {% else %}

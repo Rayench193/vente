@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="{{'assets/css/bootstrap.css'}}" >
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,td {
+        border:  1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    
+    thead {
+        background: #f2f2f2;
+    }
+</style>
+
+<div class="container">
+        <h1>Confirmation de la réception de la commande </h1>
+        <h5>Corpos de la commande: </h5>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Nom du produits</th>
+                    <th>Auteur</th>
+                    <th>Prix unitaire</th>
+                    <th>Quantité</th>
+                    <th>Prix Total</th>
+                </tr>
+            </thead>
+            {% for product in order.orderProducts %}
+                <tr>
+
+                    <td>{{product.product.name}}</td>
+                    <td>{{product.product.auteur}}</td>
+                    <td>{{product.product.price}}</td>
+                    <td> {{product.qte}} </td>
+                    <td> {{product.product.price * product.qte}} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <span>Prix de livraison: {{order.city.shippingCost}}$</span>
+        <hr>
+        <h3>Total à payer: {{order.totalPrice +order.city.shippingCost }}$ <br></h3>
+
+    </div>

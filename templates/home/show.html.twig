@@ -10,13 +10,13 @@
   <div class="book-info">
    <h2 class="book-show-title">{{product.name}}</h2>
 
-    <p class="author"> Par l'auteur : </p>
+    <p class="author"> Par l'auteur : {{product.auteur}} </p>
     <hr>
     <p class="price">Prix : {{product.price}} $</p>
     {% if product.stock > 0  %}
     <p class="stock">En stock</p>
     {% else %}
-    <p class="non-stock">Repture de stock</p>
+    <p class="non-stock">Rupture de stock</p>
     {% endif %}
     <hr>
     <p class="description">

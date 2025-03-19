@@ -20,6 +20,7 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('auteur')
             ->add('descreption')
             ->add('price')
             ->add('stock')

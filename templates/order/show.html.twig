@@ -30,29 +30,40 @@
             <tr>
                 <th>Image de produit</th>
                 <th>Nom du produits</th>
+                <th>Auteur</th>
                 <th>Prix unitaire</th>
                 <th>Quantité</th>
                 <th>Prix Total</th>
             </tr>
-            <tr>
-                {% for product in order.orderProducts %} 
-                    <tr>
-                        <td> <img src="{{ asset('uploads/images/' ~ product.product.image) }}" style="width:40px;"> </td>
-                        <td>{{product.product.name}}</td>
-                        <td>{{product.product.price}}$</td>
-                        <td>{{product.qte}}</td>
-                        <td>{{product.product.price*product.qte}}$</td>
-                    </tr>
-                {% endfor %}
-            </tr>
+            {% for product in order.orderProducts %}
+                <tr>
+
+                    <td> <img src="{{ asset('uploads/images/' ~ product.product.image) }}" style="width:40px;"> </td>
+                    <td>{{product.product.name}}</td>
+                    <td>{{product.product.auteur}}</td>
+                    <td>{{product.product.price}}</td>
+                    <td> {{product.qte}} </td>
+                    <td> {{product.product.price * product.qte}} </td>
+                </tr>
+            {% endfor %}
         </table>
         <span>Prix de livraison: {{order.city.shippingCost}}$</span>
         <h3>Total à payer: {{order.totalPrice +order.city.shippingCost }}$ <br></h3>
         {% if order.isCompleted == false %}
-        <a href="{{path('app_orders_is_completed_update',{'id':order.id})}}" class="btn btn-outline-primary col-2 m-lg-1">Marquer comme livreé</a>
-        <a onclick="return confirm('voulez vous vraiment Supprimer cette commande')" href="{{path('app_orders_remove' , {'id':order.id})}}" class="btn btn-outline-danger col-2 m-lg-1">Supprimer</a>
+        <a href="{{path('app_orders_is_completed_update',{'id':order.id})}}" class="btn btn-outline-primary col-2 m-lg-1">
+            Marquer comme livreé <i class="fa-solid fa-square-arrow-up-right"></i>
+        </a>
+        <a onclick="return confirm('voulez vous vraiment Supprimer cette commande')" href="{{path('app_orders_remove' , {'id':order.id})}}" class="btn btn-outline-danger col-2 m-lg-1">
+            Supprimer <i class="fa-solid fa-trash"></i>
+        </a>
+
     {% else %}
-        <a onclick="return confirm('voulez vous vraiment Supprimer cette commande')" href="{{path('app_orders_remove' , {'id':order.id})}}" class="btn btn-outline-danger col-2 m-lg-1">Supprimer</a>
+        <a href="{{path('app_bill', {'id':order.id})}}" class="btn btn-outline-success">
+            Imprimer la facture <i class="fa-solid fa-print"></i>
+        </a>
+        <a onclick="return confirm('voulez vous vraiment Supprimer cette commande')" href="{{path('app_orders_remove' , {'id':order.id})}}" class="btn btn-outline-danger col-2 m-lg-1">
+            Supprimer <i class="fa-solid fa-trash"></i>
+        </a>
 {% endif %}
 
     </div>

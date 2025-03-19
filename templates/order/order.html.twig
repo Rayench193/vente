@@ -34,7 +34,9 @@
                 <td>{{order.adresse}}</td>
                 <td>{{order.totalPrice + order.city.shippingCost}} $</td>
                 <td>
-                    <a class="btn btn-primary" href="{{path('app_order_show',{'id':order.id})}}">show</a>
+                    <a class="btn btn-primary" href="{{path('app_order_show',{'id':order.id})}}">
+                        Voir les détails <i class="fa-solid fa-eye"></i>
+                    </a>
                 </td>
             </tr>
 

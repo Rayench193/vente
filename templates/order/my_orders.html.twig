@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Commandes{% endblock %}
+
+{% block body %}
+    <h1>Mes Commandes: </h1>
+    <br>
+    {% if orders|length > 0 %}
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.createAt|date('d/m/Y H:i') }}</td>
+                        <td>{{ order.totalPrice }} €</td>
+                        <td>
+                            {% if order.isCompleted %}
+                                <span class="badge bg-success">Terminée</span>
+                            {% else %}
+                                <span class="badge bg-warning">En cours</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-primary btn-sm">
+                                Voir les détails  <i class="fa-solid fa-eye">
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-info">
+            Vous n'avez aucune commande pour le moment.
+        </div>
+    {% endif %}
+{% endblock %}

@@ -6,9 +6,11 @@ use App\Entity\City;
 use App\Entity\Order;
 use App\Entity\OrderProducts;
 use App\Entity\User;
+use App\Entity\UserProduct;
 use App\Form\OrderType;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
+use App\Repository\UserProductRepository;
 use App\Service\Cart;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,38 +18,45 @@ use phpDocumentor\Reflection\PseudoTypes\True_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-
+use Symfony\Component\Mailer\MailerInterface;
 
 final class OrderController extends AbstractController
 {
 
 
+
     #[Route('/order', name: 'app_order')]
-    public function index(Request $request , 
-    ProductRepository $productRepository , 
-    SessionInterface $session , 
-    EntityManagerInterface $entityManager , 
-    Cart $cart , 
-   
-    ): Response
-    {
-        $data = $cart->getCart($session);
+public function index(
+    
+    Request $request, 
+    ProductRepository $productRepository, 
+    SessionInterface $session, 
+    EntityManagerInterface $entityManager, 
+    Cart $cart
+): Response
+{
+    $data = $cart->getCart($session);
 
-        $order = new Order();
-        $form =$this->createForm(OrderType::class, $order);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($order->isPayOnDelivery()) {
-                if (!empty($data['total'])) {
-                    $order->settotalPrice($data['total']);
-                    $order->setCreateAt(new \DateTimeImmutable());
-                    $entityManager->persist($order);
-                    $entityManager->flush();
+    $order = new Order();
+    $form = $this->createForm(OrderType::class, $order);
+    $form->handleRequest($request);
 
-                    foreach ($data['cart'] as $value) {
-                        $orderProduct = new OrderProducts();
+    if ($form->isSubmitted() && $form->isValid()) {
+        if ($order->isPayOnDelivery()) {
+            if (!empty($data['total'])) {
+                $user = $this->getUser();
+                $order->setUser($user);
+
+                $order->setTotalPrice($data['total']);
+                $order->setCreateAt(new \DateTimeImmutable());
+                $entityManager->persist($order);
+                $entityManager->flush();
+
+                foreach ($data['cart'] as $value) {
+                    $orderProduct = new OrderProducts();
                     $orderProduct->setOrder($order);
                     $orderProduct->setProduct($value['product']);
                     $orderProduct->setQte($value['quantity']);
@@ -59,19 +68,20 @@ final class OrderController extends AbstractController
                     $newStock = $currentStock - $value['quantity'];
                     $product->setStock($newStock);
                     $entityManager->persist($product);
-
-                    }
                     $entityManager->flush();
                 }
-                $session->set('cart', []);
-                return $this->redirectToRoute('app_order');
+
             }
+            $session->set('cart', []);  
+          return $this->redirectToRoute('app_order');
         }
-        return $this->render('order/index.html.twig', [
-            'form' => $form->createView(),
-            'total'=>$data['total']
-        ]);
     }
+
+    return $this->render('order/index.html.twig', [
+        'form' => $form->createView(),
+        'total' => $data['total']
+    ]);
+}
 
     #[Route('/city/{id}/shipping/cost', name:'app_city_shipping_cost')]
     public function cityShippingCost(City $city): Response{
@@ -83,6 +93,7 @@ final class OrderController extends AbstractController
     public function getAllOrder(OrderRepository $orderRepository, Request $request , SecurityController $security): Response
     {
         $user = $security->getUser(); 
+
         $searchId = $request->query->get('search_id');
         $orders = [];
     
@@ -109,9 +120,12 @@ final class OrderController extends AbstractController
 {
     $order = $orderRepository->find($id);
 
+
+  
   
     return $this->render('Order/show.html.twig', [
         'order' => $order,
+        
     ]);
 }
 
@@ -130,6 +144,39 @@ final class OrderController extends AbstractController
        $entityManager->flush();
        $this->addFlash("danger","Votre commande a été supprimer");
        return $this->redirectToRoute("app_orders_show");
+    }
+    
+    #[Route('/add-to-cart/{id}', name: 'app_add_to_cart')]
+public function addToCart($id, SessionInterface $session): Response
+{
+    // Récupérer le panier depuis la session
+    $cart = $session->get('cart', []);
+
+    // Ajouter le produit au panier
+    if (!isset($cart[$id])) {
+        $cart[$id] = 1; // Quantité initiale
+    } else {
+        $cart[$id]++; // Incrémenter la quantité
+    }
+
+    // Mettre à jour la session
+    $session->set('cart', $cart);
+
+    // Rediriger vers la page précédente ou une autre page
+    return $this->redirectToRoute('app_home');
+}
+
+    #[Route("/my_orders", name:"app_my_orders")] 
+    public function myOrders(OrderRepository $orderRepository): Response {
+        $user =$this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour voir vos commandes.');
+        }
+        $orders = $orderRepository->findBy(['user'=>$user]);
+        return $this->render('order/my_orders.html.twig' , [
+            'orders'=>$orders,
+        ]);
+    
     }
 
 

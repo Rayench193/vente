@@ -51,20 +51,11 @@ class Order
     #[ORM\Column(nullable: true)]
     private ?bool $isCompleted = null;
 
-    /**
-     * @var Collection<int, UserProduct>
-     */
-    #[ORM\OneToMany(targetEntity: UserProduct::class, mappedBy: '_order', orphanRemoval: true)]
-    private Collection $userProducts;
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    private ?User $user = null;
 
-    public function __construct()
-    {
-        $this->userProducts = new ArrayCollection();
-    }
+   
 
-    
-
-    
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
@@ -217,36 +208,17 @@ class Order
         return $this;
     }
 
-    /**
-     * @return Collection<int, UserProduct>
-     */
-    public function getUserProducts(): Collection
+    public function getUser(): ?User
     {
-        return $this->userProducts;
+        return $this->user;
     }
 
-    public function addUserProduct(UserProduct $userProduct): static
+    public function setUser(?User $user): static
     {
-        if (!$this->userProducts->contains($userProduct)) {
-            $this->userProducts->add($userProduct);
-            $userProduct->setOrder($this);
-        }
+        $this->user = $user;
 
         return $this;
     }
 
-    public function removeUserProduct(UserProduct $userProduct): static
-    {
-        if ($this->userProducts->removeElement($userProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($userProduct->getOrder() === $this) {
-                $userProduct->setOrder(null);
-            }
-        }
-
-        return $this;
-    }
-
-   
-
+    
 }
