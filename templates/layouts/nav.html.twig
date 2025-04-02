@@ -1,114 +1,146 @@
-  <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-custom" data-bs-theme="dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Le Coin des Livres</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-            <li class="nav-item">
-              <a class="nav-link " aria-current="page" href=" {{path('app_home')}} ">Acceuil</a>
-            </li>
-            {% if categories is defined%}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Categories
-              </a>
-              <ul class="dropdown-menu">
-                {% for category in categories %}
-                <li><a class="dropdown-item text-success" style="font-weight: bolder" href="">{{category.name}}</a></li>
-                  {% for subCategory in category.subCategories %} 
-                  <li><a class="dropdown-item" href="{{path('app_home_product_filter',{'id':subCategory.id})}}">{{subCategory.name}}</a></li>
-                  {% endfor%}
-                  <li><hr class="dropdown-divider"></li>
-                {% endfor %}
-              </ul>
-            </li>
-            {% endif %}
-
-            {% if is_granted("ROLE_ADMIN")%}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Administration
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{{path('app_category')}}">Catégories</a></li>
-                <li><a class="dropdown-item" href="{{path('app_category_new')}}">Ajouter une Catégorie</a></li>
-                <li><a class="dropdown-item" href="{{path('app_sub_category_index')}}">Sous Catégorie</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{path('app_product_index')}}">Produits</a></li>
-                <li><a class="dropdown-item" href="{{path('app_product_new')}}">Ajouter un Produit</a></li>
-                <li><hr class="dropdown-divider"></li>
-                
-                <li><a class="dropdown-item" href="{{path('app_orders_show')}}">Commandes</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href=" {{path('app_user')}} ">Utilistateurs</li>
-                <li><a class="dropdown-item" href=" {{path('app_dashboard')}} ">Tableau de Bord</li>
-              </ul>
-            </li>
-  
-            {% elseif is_granted("ROLE_EDITOR")%}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Administration
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{{path('app_category')}}">Catégories</a></li>
-                <li><a class="dropdown-item" href="{{path('app_category_new')}}">Ajouter une Catégorie</a></li>
-                <li><a class="dropdown-item" href="{{path('app_sub_category_index')}}">Sous Catégorie</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{path('app_product_index')}}">Produits</a></li>
-                <li><a class="dropdown-item" href="{{path('app_product_new')}}">Ajouter un Produit</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{path('app_orders_show')}}">Commandes</a></li>                
-              </ul>
-            </li>
-            {% endif %}
-
-            {% if app.user ==false%}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                 Mon Compte
-                </a>
-                <ul class="dropdown-menu">
-                <li class="nav-item">
-                  <a class="nav-link " href ="{{path('app_register')}}">Créez votre compte</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link " href ="{{path('app_login')}}">Conexxion</a>
-                </li>
-              </ul>
-          </li>
-              {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_cart') }}">
-                    <i class="fas fa-shopping-cart" style="color: #ffffff;"></i>
-                    {% if app.session.get('cart')|length > 0 %}
-                        <span class="badge bg-danger">{{ app.session.get('cart')|length }}</span>
-                    {% endif %}
-                </a>
-            </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-               Mon Compte
-              </a>
-              <ul class="dropdown-menu">
-                <li class="nav-item">
-                  <a class="nav-link " href ="{{ path('app_my_orders') }}">Historique</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link " href ="{{ path('app_logout') }}">Déconnexion</a>
-                </li>
-              </ul>
-            </li>
-            {% endif%}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container">
+    <!-- Logo/Brand avec icône livre -->
+    <a class="navbar-brand d-flex align-items-center" href="{{path('app_home')}}">
+      <i class="fas fa-book-open me-2"></i>
+      <span class="fw-bold">Le Coin des Livres</span>
+    </a>
+    
+    <!-- Bouton mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- Contenu de la navbar -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <!-- Liens principaux -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="{{path('app_home')}}">
+            <i class="fas fa-home me-1"></i> Accueil
+          </a>
+        </li>
+        
+        
+        <!-- Menu Admin -->
+        {% if is_granted("ROLE_ADMIN") %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-cog me-1"></i> Administration
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+            <li><h6 class="dropdown-header">Gestion des Catégories</h6></li>
+            <li><a class="dropdown-item" href="{{path('app_category')}}"><i class="fas fa-list me-1"></i> Catégories</a></li>
+            <li><a class="dropdown-item" href="{{path('app_category_new')}}"><i class="fas fa-plus me-1"></i> Ajouter</a></li>
+            <li><a class="dropdown-item" href="{{path('app_sub_category_index')}}"><i class="fas fa-list-alt me-1"></i> Sous-catégories</a></li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Gestion des Produits</h6></li>
+            <li><a class="dropdown-item" href="{{path('app_product_index')}}"><i class="fas fa-book me-1"></i> Produits</a></li>
+            <li><a class="dropdown-item" href="{{path('app_product_new')}}"><i class="fas fa-plus me-1"></i> Ajouter</a></li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{path('app_orders_show')}}"><i class="fas fa-receipt me-1"></i> Commandes</a></li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{path('app_user')}}"><i class="fas fa-users me-1"></i> Utilisateurs</a></li>
+            <li><a class="dropdown-item" href="{{path('app_dashboard')}}"><i class="fas fa-chart-line me-1"></i> Tableau de bord</a></li>
           </ul>
-          <form data-turbo="false" class="d-flex" role="search" action="{{path('app_search_engine')}}" method="get">
-            <input name="word" class="form-control me-2" type="search" placeholder="Rechercher un produit " aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
+        </li>
+        
+        {% elseif is_granted("ROLE_EDITOR") %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="editorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-edit me-1"></i> Édition
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="editorDropdown">
+            <li><h6 class="dropdown-header">Gestion des Catégories</h6></li>
+            <li><a class="dropdown-item" href="{{path('app_category')}}"><i class="fas fa-list me-1"></i> Catégories</a></li>
+            <li><a class="dropdown-item" href="{{path('app_category_new')}}"><i class="fas fa-plus me-1"></i> Ajouter</a></li>
+            <li><a class="dropdown-item" href="{{path('app_sub_category_index')}}"><i class="fas fa-list-alt me-1"></i> Sous-catégories</a></li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li><h6 class="dropdown-header">Gestion des Produits</h6></li>
+            <li><a class="dropdown-item" href="{{path('app_product_index')}}"><i class="fas fa-book me-1"></i> Produits</a></li>
+            <li><a class="dropdown-item" href="{{path('app_product_new')}}"><i class="fas fa-plus me-1"></i> Ajouter</a></li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{path('app_orders_show')}}"><i class="fas fa-receipt me-1"></i> Commandes</a></li>
+          </ul>
+        </li>
+        {% endif %}
+      </ul>
+      
+      <!-- Partie droite (recherche + compte) -->
+      <div class="d-flex align-items-center">
+        <!-- Barre de recherche -->
+        <form class="d-flex me-3" role="search" action="{{path('app_search_engine')}}" method="get">
+          <div class="input-group">
+            <input name="word" class="form-control border-end-0 border-secondary bg-white text-dark" type="search" placeholder="Rechercher..." aria-label="Search">
+            <button class="btn btn-outline-light " type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </form>
+        
+        <!-- Panier -->
+        {% if app.user %}
+        <a class="btn btn-outline-light position-relative me-2" href="{{ path('app_cart') }}">
+          <i class="fas fa-shopping-cart"></i>
+          {% if app.session.get('cart')|length > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ app.session.get('cart')|length }}
+            </span>
+          {% endif %}
+        </a>
+        {% endif %}
+        
+        <!-- Compte utilisateur -->
+        <div class="dropdown">
+          {% if app.user == false %}
+          <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user me-1"></i> Compte
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+            <li><a class="dropdown-item" href="{{path('app_login')}}"><i class="fas fa-sign-in-alt me-1"></i> Connexion</a></li>
+            <li><a class="dropdown-item" href="{{path('app_register')}}"><i class="fas fa-user-plus me-1"></i> Créer un compte</a></li>
+          </ul>
+          {% else %}
+          <a class="btn btn-outline-light dropdown-toggle d-flex align-items-center" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle me-1"></i>
+            <span class="d-none d-lg-inline">{{ app.user.firstName ?? 'Mon compte' }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><h6 class="dropdown-header">Connecté en tant que {{ app.user.email }}</h6></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ path('app_my_orders') }}"><i class="fas fa-box-open me-1"></i> Mes commandes</a></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-1"></i> Paramètres</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt me-1"></i> Déconnexion</a></li>
+          </ul>
+          {% endif %}
         </div>
       </div>
-    </nav>
-    
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navbar {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+  
+  .dropdown-menu {
+    min-width: 15rem;
+  }
+  
+  .input-group .form-control:focus {
+    box-shadow: none;
+    border-color: #6c757d;
+  }
+</style>

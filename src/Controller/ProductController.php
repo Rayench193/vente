@@ -95,6 +95,7 @@ final class ProductController extends AbstractController
             $entityManager->remove($product);
             $entityManager->flush();
         }
+      
         $this->addFlash('danger','Votre produit a été supprimé');
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }

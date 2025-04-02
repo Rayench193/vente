@@ -3,45 +3,71 @@
 {% block title %}Mes Commandes{% endblock %}
 
 {% block body %}
-    <h1>Mes Commandes: </h1>
-    <br>
-    {% if orders|length > 0 %}
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Total</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                    <tr>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.createAt|date('d/m/Y H:i') }}</td>
-                        <td>{{ order.totalPrice }} €</td>
-                        <td>
-                            {% if order.isCompleted %}
-                                <span class="badge bg-success">Terminée</span>
-                            {% else %}
-                                <span class="badge bg-warning">En cours</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-primary btn-sm">
-                                Voir les détails  <i class="fa-solid fa-eye">
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-        <div class="alert alert-info">
-            Vous n'avez aucune commande pour le moment.
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary border-bottom-0 py-3" style="color:#fff">
+                        <h1 class="h4 mb-0">Mes Commandes</h1>
+                    </div>
+                    
+                    {% if orders|length > 0 %}
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Référence</th>
+                                        <th>Date</th>
+                                        <th>Montant</th>
+                                        <th>Statut</th>
+                                        <th class="text-end pe-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                        <tr class="align-middle">
+                                            <td class="ps-4 fw-medium">#{{ order.id }}</td>
+                                            <td>{{ order.createAt|date('d/m/Y H:i') }}</td>
+                                            <td class="fw-medium">{{ order.totalPrice|number_format(2, ',', ' ') }} TND</td>
+                                            <td>
+                                                {% if order.isCompleted %}
+                                                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success">
+                                                        <i class="fa-solid fa-check-circle me-1"></i> Terminée
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning">
+                                                        <i class="fa-solid fa-spinner me-1"></i> En cours
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <a href="{{ path('app_order_show', {'id': order.id}) }}" 
+                                                   class="btn btn-outline-primary btn-sm rounded-pill">
+                                                    <i class="fa-solid fa-eye me-1"></i> Détails
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="card-body">
+                        <div class="alert alert-info mb-0">
+                            <div class="d-flex align-items-center">
+                                <i class="fa-solid fa-info-circle me-3 fs-4"></i>
+                                <div>
+                                    <h5 class="alert-heading mb-1">Aucune commande</h5>
+                                    <p class="mb-0">Vous n'avez passé aucune commande pour le moment.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    {% endif %}
+    </div>
 {% endblock %}

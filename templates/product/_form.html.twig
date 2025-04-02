@@ -1,11 +1,200 @@
-{{ form_start(form) }}
+{{ form_start(form, {'attr': {'class': 'container mt-4 form-product', 'novalidate': 'novalidate'}}) }}
 
-{{form_row(form.name,{'attr':{'class':'form form-control'}} ) }}
-{{form_row(form.auteur,{'attr':{'class':'form form-control'}} ) }}
-{{form_row(form.descreption,{'attr':{'class':'form form-control'}} ) }}
-{{form_row(form.price,{'attr':{'class':'form form-control'}} ) }}
-{{form_row(form.stock,{'attr':{'class':'form form-control'}} ) }}
-{{form_row(form.subCategories,{'attr':{'class':'form form-control'}} ) }}
-{{form_row(form.image,{'attr':{'class':'form '}} ) }}
-    <button class="btn btn-outline-primary btn-block">{{ button_label|default('Save') }}</button>
+    {# En-tête du formulaire #}
+    <div class="mb-4 border-bottom pb-3">
+        <h2 class="h4 fw-bold text-primary">
+            <i class="bi bi-book me-2"></i>Informations du Livre
+        </h2>
+        <p class="text-muted">Remplissez les détails de votre livre</p>
+    </div>
+
+    {# Section Principale #}
+    <div class="row g-4 mb-4">
+        {# Nom du Livre #}
+        <div class="col-md-6">
+            <div class="form-floating">
+                {{ form_widget(form.name, {
+                    'attr': {
+                        'class': 'form-control' ~ (form.name.vars.errors|length ? ' is-invalid' : ''),
+                        'placeholder': 'Nom du livre'
+                    }
+                }) }}
+                {{ form_label(form.name, null, {'label': 'Titre du Livre'}) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.name)|striptags }}
+                </div>
+            </div>
+        </div>
+
+        {# Auteur #}
+        <div class="col-md-6">
+            <div class="form-floating">
+                {{ form_widget(form.auteur, {
+                    'attr': {
+                        'class': 'form-control' ~ (form.auteur.vars.errors|length ? ' is-invalid' : ''),
+                        'placeholder': 'Auteur'
+                    }
+                }) }}
+                {{ form_label(form.auteur, null, {'label': 'Auteur'}) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.auteur)|striptags }}
+                </div>
+            </div>
+        </div>
+
+        {# Description #}
+        <div class="col-12">
+            <div class="form-floating">
+                {{ form_widget(form.descreption, {
+                    'attr': {
+                        'class': 'form-control' ~ (form.descreption.vars.errors|length ? ' is-invalid' : ''),
+                        'placeholder': 'Description',
+                        'style': 'height: 120px'
+                    }
+                }) }}
+                {{ form_label(form.descreption, null, {'label': 'Description'}) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.descreption)|striptags }}
+                </div>
+                <small class="form-text text-muted">Minimum 20 caractères</small>
+            </div>
+        </div>
+    </div>
+
+    {# Section Détails #}
+    <div class="mb-4 border-bottom pb-4">
+        <h3 class="h5 fw-bold text-secondary">
+            <i class="bi bi-tags me-2"></i>Détails du Produit
+        </h3>
+
+        <div class="row g-4 mt-2">
+            {# Prix #}
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <div class="input-group">
+                        {{ form_widget(form.price, {
+                            'attr': {
+                                'class': 'form-control' ~ (form.price.vars.errors|length ? ' is-invalid' : ''),
+                                'placeholder': 'Prix',
+                                'step': '0.01'
+                            }
+                        }) }}
+                        <span class="input-group-text">€</span>
+                    </div>
+ 
+                </div>
+            </div>
+
+            {# Stock #}
+            <div class="col-md-6">
+                <div class="form-floating">
+                    {{ form_widget(form.stock, {
+                        'attr': {
+                            'class': 'form-control' ~ (form.stock.vars.errors|length ? ' is-invalid' : ''),
+                            'placeholder': 'Stock'
+                        }
+                    }) }}
+                    {{ form_label(form.stock, null, {'label': 'Quantité en Stock'}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(form.stock)|striptags }}
+                    </div>
+                </div>
+            </div>
+
+            {# Catégorie #}
+            <div class="col-md-9 w-50">
+                <div class="form-floating">
+                    {{ form_widget(form.subCategories, {
+                        'attr': {
+                            'class': 'form-select' ~ (form.subCategories.vars.errors|length ? ' is-invalid' : '')
+                        }
+                    }) }}
+                    {{ form_label(form.subCategories, null, {'label': 'Catégorie'}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(form.subCategories)|striptags }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Section Image #}
+    <div class="mb-4">
+        <h3 class="h5 fw-bold text-secondary mb-3">
+            <i class="bi bi-image me-2"></i>Image du Livre
+        </h3>
+        
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form_widget(form.image, {
+                        'attr': {
+                            'class': 'form-control' ~ (form.image.vars.errors|length ? ' is-invalid' : ''),
+                            'onchange': 'previewImage(this)'
+                        }
+                    }) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(form.image)|striptags }}
+                    </div>
+                    <small class="text-muted">Formats acceptés: JPG, PNG (Max 2MB)</small>
+                </div>
+                
+                {# Aperçu de l'image #}
+                <div class="text-center mt-3 d-none" id="imagePreviewContainer">
+                    <img src="#" alt="Aperçu de l'image" id="imagePreview" class="img-thumbnail" style="max-height: 200px;">
+                    <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="removeImage()">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Boutons de soumission #}
+    <div class="d-flex justify-content-between mt-5">
+        <a href="{{ path('app_product_index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+        </a>
+        <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-save me-2"></i>{{ button_label|default('Enregistrer') }}
+        </button>
+    </div>
+
 {{ form_end(form) }}
+
+{# Script pour la prévisualisation d'image #}
+<script>
+    function previewImage(input) {
+        const preview = document.getElementById('imagePreview');
+        const container = document.getElementById('imagePreviewContainer');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                container.classList.remove('d-none');
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    function removeImage() {
+        document.getElementById('{{ form.image.vars.id }}').value = '';
+        document.getElementById('imagePreview').src = '#';
+        document.getElementById('imagePreviewContainer').classList.add('d-none');
+    }
+</script>
+
+<style>
+    .form-product .form-floating > label {
+        padding: 1rem 1.25rem;
+    }
+    .form-product .is-invalid ~ label {
+        color: #dc3545;
+    }
+    .form-product .form-control:focus, .form-product .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+</style>

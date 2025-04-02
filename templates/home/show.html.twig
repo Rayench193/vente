@@ -1,35 +1,205 @@
 {% extends 'base.html.twig' %}
-{% block title %}Home Controle{% endblock %}
+{% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
-<main class="book-details">
-  <div class="book-images">
-    <img src="{{ asset ('uploads/images/' ~ product.image) }}" alt="Book Cover" class="main-image">
+<div class="container py-5">
+  <div class="card shadow-lg">
+    <div class="row g-0">
+      <!-- Image Section -->
+      <div class="col-md-5">
+        <div class="p-4 d-flex justify-content-center align-items-center h-100">
+          <img src="{{ asset('uploads/images/' ~ product.image) }}" 
+               class="img-fluid rounded-3" 
+               alt="{{ product.name }}"
+               style="max-height: 500px; object-fit: contain;">
+        </div>
+      </div>
+      
+      <!-- Details Section -->
+      <div class="col-md-7">
+        <div class="card-body p-4">
+          <!-- Product Title -->
+          <h1 class="card-title mb-3">{{ product.name }}</h1>
+          
+          <!-- Author -->
+          <div class="d-flex align-items-center mb-3">
+            <span class="badge bg-light text-dark fs-6 me-3">Auteur</span>
+            <h4 class="mb-0 text-muted">{{ product.auteur }}</h4>
+          </div>
+          
+          <!-- Availability -->
+          <div class="mb-4">
+            {% if product.stock > 0 %}
+              <span class="badge bg-success fs-6 p-2">
+                <i class="bi bi-check-circle-fill me-2"></i>En Stock
+              </span>
+            {% else %}
+              <span class="badge bg-danger fs-6 p-2">
+                <i class="bi bi-x-circle-fill me-2"></i>Rupture de stock
+              </span>
+            {% endif %}
+          </div>
+          
+          <!-- Price -->
+          <div class="mb-4">
+            <h2 class="text-primary">{{ product.price }} $</h2>
+      
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="d-flex mb-4">
+            {% if product.stock > 0 %}
+              <a href="{{ path('app_cart_new', {'id': product.id}) }}" 
+                 class="btn btn-primary btn-lg me-3 px-4 py-2">
+                <i class="bi bi-cart-plus me-2"></i>Ajouter au panier
+              </a>
+          
+            {% else %}
+              <button class="btn btn-secondary btn-lg px-4 disabled">
+                Indisponible
+              </button>
+            {% endif %}
+          </div>
+          
+          <!-- Description -->
+          <div class="border-top pt-4">
+            <h4 class="mb-3">Description</h4>
+            <p class="card-text fs-5">{{ product.descreption }}</p>
+          </div>
+          
+          <!-- Additional Info -->
+          <div class="mt-4 pt-3 border-top">
+            <div class="row">
+              <div class="col-6">
+                <p class="mb-1"><i class="bi bi-truck me-2"></i> Livraison rapide</p>
+                <p class="mb-1"><i class="bi bi-arrow-return-left me-2"></i> Retours faciles</p>
+              </div>
+              <div class="col-6">
+                <p class="mb-1"><i class="bi bi-shield-check me-2"></i> Paiement sécurisé</p>
+                <p class="mb-1"><i class="bi bi-headset me-2"></i> Support 24/7</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <div class="book-info">
-   <h2 class="book-show-title">{{product.name}}</h2>
+<footer class="bg-dark text-white pt-5 pb-4">
+  <div class="container">
+    <div class="row">
+      <!-- Colonne Logo et description -->
+      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fas fa-book-open fa-2x me-2 text-primary"></i>
+          <span class="fw-bold fs-4">Le Coin des Livres</span>
+        </div>
+        <p class="text-muted">Votre librairie en ligne pour découvrir des milliers d'ouvrages dans tous les genres littéraires.</p>
+        <div class="social-icons mt-3">
+          <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
 
-    <p class="author"> Par l'auteur : {{product.auteur}} </p>
-    <hr>
-    <p class="price">Prix : {{product.price}} $</p>
-    {% if product.stock > 0  %}
-    <p class="stock">En stock</p>
-    {% else %}
-    <p class="non-stock">Rupture de stock</p>
-    {% endif %}
-    <hr>
-    <p class="description">
-      <h2>Resumé: </h2>
-      <p>
-      Tu pourras apprendre dans ce livre deux façons différentes de penser à l'argent.
-        L'auteur partage des idées importantes sur la gestion de l'argent en montrant comment ses deux pères pensaient à l'argent. L'un des pères travaillait dur et pensait que l'obtention d'une bonne éducation et la sécurité de l'emploi étaient les choses les plus importantes. L'autre père était un chef d'entreprise qui ne pensait pas que l'éducation formelle était aussi importante que l'apprentissage de l'argent. 
-      </p>
+      <!-- Colonne Liens rapides -->
+      <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+        <h5 class="text-uppercase mb-4">Liens rapides</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="{{path('app_home')}}" class=" text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Accueil</a></li>
+          <li class="mb-2"><a href="#" class=" text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Nouveautés</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Best-sellers</a></li>
+          <li class="mb-2"><a href="#" class=" text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Promotions</a></li>
+          <li class="mb-2"><a href="#" class=" text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Contact</a></li>
+        </ul>
+      </div>
 
 
+      <!-- Colonne Contact -->
+      <div class="col-lg-3 col-md-6">
+        <h5 class="text-uppercase mb-4">Contactez-nous</h5>
+        <ul class="list-unstyled text-muted">
+          <li class="mb-3 d-flex">
+            <i class="fas fa-map-marker-alt text-primary me-2 mt-1"></i>
+            <span>123 Rue des Livres, 75000 Paris</span>
+          </li>
+          <li class="mb-3 d-flex">
+            <i class="fas fa-phone text-primary me-2 mt-1"></i>
+            <span>+33 1 23 45 67 89</span>
+          </li>
+          <li class="mb-3 d-flex">
+            <i class="fas fa-envelope text-primary me-2 mt-1"></i>
+            <span>contact@lecoindeslivres.com</span>
+          </li>
+          <li class="mb-3 d-flex">
+            <i class="fas fa-clock text-primary me-2 mt-1"></i>
+            <span>Lun-Ven: 9h-18h</span>
+          </li>
+        </ul>
+      </div>
+    </div>
 
+    <hr class="my-4 bg-secondary">
 
+    <!-- Copyright -->
+    <div class="row align-items-center">
+      <div class="col-md-6 text-center text-md-start">
+        <p class="small mb-0">&copy; 2025 Le Coin des Livres. Tous droits réservés.</p>
+      </div>
 
-    <a href="{{path('app_cart_new',{'id':product.id})}}" class="add-to-cart">Ajouter au pannier</a>
+    </div>
   </div>
+</footer>
+
+
+<style>
+  .card {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .card-img-container {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    transition: all 0.3s;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+  }
+  
+  .quantity-selector {
+    width: 120px;
+  }
+    footer a:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+  }
+  
+  .social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    background-color: rgba(255,255,255,0.2);
+    text-decoration: none !important;
+  }
+</style>
 {% endblock %}

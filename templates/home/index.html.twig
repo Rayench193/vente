@@ -1,28 +1,183 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Acceuil{% endblock %}
 
 {% block body %}
-<div class="container">
-  <div class="product-grid">
-    {% for product in products %}
-    <div class="product-card">
-        <div class="book-cover-container">
-          <img src="{{ asset ('uploads/images/' ~ product.image) }}" class="book-cover">
-        </div>
-        <a  style="text-decoration : none; " href="{{path('app_home_product_show', {'id':product.id}) }}"><h2 class="book-title">{{product.name}}</h2></a>
-        <h5 class="book-author">{{product.auteur}} </h5>
-        <p class="book-price">${{product.price}}</p>
-        {% if product.stock > 0 %} 
-        <p class="stock">En Stock</p>
-        <a href ="{{path('app_cart_new',{'id':product.id})}}" class="cta-button">Ajouter au pannier</a>
-          {% else  %}
-          <p class="non-stock">Rupture de stock</p>
-          <a href ="#" class="cta-button disabled">Ajouter au pannier</a>
-        {% endif %}
-      </div>
-    {% endfor %} 
+<style>
+  .center-links {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    width: 100%; /* Assurez-vous que la largeur est de 100% */
+  }
+ 
+ 
+</style>
+<br>
+<nav class="navbar navbar-expand-lg  shadow-sm navbar-style">
+  <div class="container">
+
+    
+    <!-- Bouton toggle pour mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- Contenu de la navbar -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <!-- Menu principal centré -->
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        {% for category in categories %}
+        <li class="nav-item dropdown mx-2">
+          <a class="nav-link dropdown-toggle px-3 py-2 rounded" href="#" id="navbarDropdown{{category.id}}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-{{category.icon|default('tag')}} me-1"></i>
+            {{category.name}}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-lg-end animate slideIn" aria-labelledby="navbarDropdown{{category.id}}">
+            {% for subCategory in category.subCategories %}
+            <li>
+              <a class="dropdown-item d-flex align-items-center py-2" href="{{path('app_home_product_filter',{'id':subCategory.id})}}">
+                <i class="bi bi-{{subCategory.icon|default('chevron-right')}} me-2 text-primary"></i>
+                <span>{{subCategory.name}}</span>
+              </a>
+            </li>
+            {% if not loop.last %}<li><hr class="dropdown-divider"></li>{% endif %}
+            {% endfor %}
+          </ul>
+        </li>
+        {% endfor %}
+      </ul>
+      
+      <!-- Boutons supplémentaires à droite -->
+
+    </div>
   </div>
-</div>
+</nav>
+<main class="container py-3">
+  <div class="row g-4">
+    {% for product in products %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body text-center position-relative">
+        <img alt="Book cover" class="book-cover img-fluid rounded" src="{{ asset ('uploads/images/' ~ product.image) }}"/> 
+        <a href="{{path('app_home_product_show', {'id':product.id}) }}">
+          <h4 class="card-title mt-3" style="text-decoration : none;"> {{product.name}} </h4>
+        </a>
+        <p>{{product.auteur}}</p>
+        {% if product.stock > 0 %}
+        <p class="stock">En Stock</p>
+        <p class="price" style="color:black">{{product.price}} TND</p>
+        <a class="btn btn-outline-secondary w-100" href ="{{path('app_cart_new',{'id':product.id})}}">
+          <i class="fas fa-shopping-cart me-2"></i>
+          Ajouter au panier
+        </a>
+        {%else%}
+        <p class="non-stock">Ruptur de stock</p>
+        <p class="price" style="color:black" >{{product.price}} TND</p>
+        <a class="btn btn-outline-secondary w-100" href ="#">
+          <i class="fas fa-shopping-cart me-2"></i>
+          Ajouter au panier
+        </a>
+        {% endif %}
+        
+      
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+</main>
+
+
   {{knp_pagination_render(products, 'layouts/pagination_template.html.twig')}}
+
+
+<footer class="bg-dark text-white pt-5 pb-4">
+  <div class="container">
+    <div class="row">
+      <!-- Colonne Logo et description -->
+      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+        <div class="d-flex align-items-center mb-3">
+          <i class="fas fa-book-open fa-2x me-2 text-primary"></i>
+          <span class="fw-bold fs-4">Le Coin des Livres</span>
+        </div>
+        <p class="text-muted">Votre librairie en ligne pour découvrir des milliers d'ouvrages dans tous les genres littéraires.</p>
+        <div class="social-icons mt-3">
+          <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <!-- Colonne Liens rapides -->
+      <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+        <h5 class="text-uppercase mb-4">Liens rapides</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="{{path('app_home')}}" class=" text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Accueil</a></li>
+          <li class="mb-2"><a href="#" class=" text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Nouveautés</a></li>
+          <li class="mb-2"><a href="#" class="text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Best-sellers</a></li>
+          <li class="mb-2"><a href="#" class=" text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Promotions</a></li>
+          <li class="mb-2"><a href="#" class=" text-decoration-none"><i class="fas fa-chevron-right me-1 text-primary"></i> Contact</a></li>
+        </ul>
+      </div>
+
+
+      <!-- Colonne Contact -->
+      <div class="col-lg-3 col-md-6">
+        <h5 class="text-uppercase mb-4">Contactez-nous</h5>
+        <ul class="list-unstyled text-muted">
+          <li class="mb-3 d-flex">
+            <i class="fas fa-map-marker-alt text-primary me-2 mt-1"></i>
+            <span>123 Rue des Livres, 75000 Paris</span>
+          </li>
+          <li class="mb-3 d-flex">
+            <i class="fas fa-phone text-primary me-2 mt-1"></i>
+            <span>+33 1 23 45 67 89</span>
+          </li>
+          <li class="mb-3 d-flex">
+            <i class="fas fa-envelope text-primary me-2 mt-1"></i>
+            <span>contact@lecoindeslivres.com</span>
+          </li>
+          <li class="mb-3 d-flex">
+            <i class="fas fa-clock text-primary me-2 mt-1"></i>
+            <span>Lun-Ven: 9h-18h</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="my-4 bg-secondary">
+
+    <!-- Copyright -->
+    <div class="row align-items-center">
+      <div class="col-md-6 text-center text-md-start">
+        <p class="small mb-0">&copy; 2025 Le Coin des Livres. Tous droits réservés.</p>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer a:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+  }
+  
+  .social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    background-color: rgba(255,255,255,0.2);
+    text-decoration: none !important;
+  }
+</style>
 {% endblock %}

@@ -19,10 +19,10 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', null , ['label'=>'Nom',])
             ->add('auteur')
             ->add('descreption')
-            ->add('price')
+            ->add('price' , null , ['label'=>'Prix',])
             ->add('stock')
             ->add('image',FileType::class,[
                 'label'=> 'Image de produit',
@@ -42,6 +42,7 @@ class ProductType extends AbstractType
                 ]
             ])                   
             ->add('subCategories', EntityType::class, [
+                'label'=>'Sous Catègorie',
                 'class' => SubCategory::class,
                 'choice_label' => 'name',
                 'multiple' => true,

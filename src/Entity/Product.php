@@ -37,11 +37,11 @@ class Product
     #[ORM\Column]
     private ?int $stock = null;
 
-    /**
-     * @var Collection<int, OrderProducts>
-     */
-    #[ORM\OneToMany(targetEntity: OrderProducts::class, mappedBy: 'product')]
-    private Collection $orderProducts;
+/**
+ * @var Collection<int, OrderProducts>
+ */
+#[ORM\OneToMany(targetEntity: OrderProducts::class, mappedBy: 'product', cascade: ['remove'])]
+private Collection $orderProducts;
 
     #[ORM\Column(length: 255)]
     private ?string $auteur = null;

@@ -3,26 +3,37 @@
 {% block title %}Search results{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h2>Results de recherche: </h2>
-  <div class="product-grid">
+<main class="container py-3">
+  <div class="row g-4">
     {% for product in products %}
-    <div class="product-card">
-        <div class="book-cover-container">
-          <img src="{{ asset ('uploads/images/' ~ product.image) }}" class="book-cover">
-        </div>
-        <a  style="text-decoration : none; " href="{{path('app_home_product_show', {'id':product.id}) }}"><h2 class="book-title">{{product.name}}</h2></a>
-        <p class="book-author">{{product.auteur}}</p>
-        <p class="book-price">${{product.price}}</p>
-        {% if product.stock > 0 %} 
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body text-center position-relative">
+        <img alt="Book cover" class="book-cover img-fluid rounded" src="{{ asset ('uploads/images/' ~ product.image) }}"/> 
+        <a href="{{path('app_home_product_show', {'id':product.id}) }}">
+          <h4 class="card-title mt-3" style="text-decoration : none;"> {{product.name}} </h4>
+        </a>
+        {% if product.stock > 0 %}
         <p class="stock">En Stock</p>
-        <a href ="{{path('app_cart_new',{'id':product.id})}}" class="cta-button">Ajouter au pannier</a>
-          {% else  %}
-          <p class="non-stock">Rupture de stock</p>
-          <a href ="#" class="cta-button disabled">Ajouter au pannier</a>
+        <p class="price" style="color:black">{{product.price}} TND</p>
+        <a class="btn btn-outline-secondary w-100" href ="{{path('app_cart_new',{'id':product.id})}}">
+          <i class="fas fa-shopping-cart me-2"></i>
+          Ajouter au panier
+        </a>
+        {%else%}
+        <p class="non-stock">Ruptur de stock</p>
+        <p class="price" style="color:black" >{{product.price}} TND</p>
+        <a class="btn btn-outline-secondary w-100" href ="#">
+          <i class="fas fa-shopping-cart me-2"></i>
+          Ajouter au panier
+        </a>
         {% endif %}
+        
+      
       </div>
-    {% endfor %} 
+    </div>
   </div>
-</div>
+  {% endfor %}
+  </div>
+</main>
 {% endblock %}
