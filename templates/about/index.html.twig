@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À propos - Le Coin des Livres{% endblock %}
+
+{% block body %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="display-4 mb-4">À propos de nous</h1>
+                <p class="lead">Le Coin des Livres est une librairie en ligne passionnée par la littérature.</p>
+                
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2><i class="fas fa-book-open text-primary me-2"></i> Notre mission</h2>
+                        <p>Depuis notre création, nous nous engageons à :</p>
+                        <ul>
+                            <li>Promouvoir la lecture auprès de tous les publics</li>
+                            <li>Offrir une sélection variée et de qualité</li>
+                            <li>Fournir un service client exceptionnel</li>
+                            <li>Faciliter l'accès à la culture</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2><i class="fas fa-users text-primary me-2"></i> Notre équipe</h2>
+                        <p>Une équipe de passionnés à votre service :</p>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center">
+                            <img class="rounded-circle me-3" src="{{ asset('uploads/photo/rayen.jpg') }}" style="width: 80px; height: 80px;">
+                            <div>
+                                <h5 class="mb-1">Rayen Chakroun</h5>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <img class="rounded-circle me-3" src="{{ asset('uploads/photo/taher.jpg') }}" style="width: 80px; height: 80px;">
+                                <div>
+                                    <h5 class="mb-1">Taher Zribi</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+{% endblock %}

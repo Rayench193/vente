@@ -1,39 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Categories{% endblock %}
+{% block title %}Gestion des Catégories{% endblock %}
 
 {% block body %}
-<div class="container"><br> <br>
-    <h1>Categories</h1><br> <br>
-     {% include "layouts/flash_msg.html.twig" %} 
-    <div class="container"> 
-        <table class="table">
-            <thead>
-            <tr>
-                <th>id</th>
-                <th>Nom de categorie</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for category in categories %} 
-                <tr>
-                    <td>{{category.id}}</td>
-                    <td>{{category.name}}</td>
-                    <td>
-                        <a class="btn btn-outline-primary" href="{{path('app_category_update',{'id':category.id})}}">
-                            Modifier <i class="fa-solid fa-pen"></i>
-                        </a> 
-                        <a href="{{path('app_category_delete',{'id':category.id})}}" onclick="return confirm('voulez vous vraiment Supprimer cette categorie')" class="btn btn-danger">
-                          Supprimer  <i class="fa-solid fa-trash" style="font-size:15px ; margin:5px"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% else %}Aucune Categories affiché pour l'instant
-            {% endfor %}
-            </tbody>
-        </table>
-        <br>
-        <a class="btn btn-outline-primary" href="{{path('app_category_new')}}">Ajouter une categorie</a> 
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-primary">
+            <i class="fas fa-list me-1"></i>Gestion des Catégories
+        </h1>
+        <a href="{{path('app_category_new')}}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-1"></i> Nouvelle Catégorie
+        </a>
+    </div>
+
+    {% include "layouts/flash_msg.html.twig" %}
+    
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="py-3">#ID</th>
+                            <th class="py-3">Nom de la catégorie</th>
+                            <th class="py-3 text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td class="align-middle">{{category.id}}</td>
+                                <td class="align-middle fw-semibold">{{category.name}}</td>
+                                <td class="align-middle text-end">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="{{path('app_category_update',{'id':category.id})}}" 
+                                           class="btn btn-outline-primary" 
+                                           title="Modifier">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{path('app_category_delete',{'id':category.id})}}" 
+                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')" 
+                                           class="btn btn-outline-danger" 
+                                           title="Supprimer">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">
+                                    <i class="fas fa-info-circle me-2"></i>Aucune catégorie trouvée
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

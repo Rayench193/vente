@@ -46,13 +46,25 @@ private Collection $orderProducts;
     #[ORM\Column(length: 255)]
     private ?string $auteur = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $type_produit = null;
+
+    /**
+     * @var Collection<int, Emprunt>
+     */
+    #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'product')]
+    private Collection $emprunts;
+
 
     #[ORM\Column(length: 255)]
+
+
 
     public function __construct()
     {
         $this->subCategories = new ArrayCollection();
         $this->orderProducts = new ArrayCollection();
+        $this->emprunts = new ArrayCollection();
 
       
     }
@@ -188,4 +200,59 @@ private Collection $orderProducts;
         return $this;
     }
 
+    public function getTypeProduit(): ?string
+    {
+        return $this->type_produit;
+    }
+
+    public function setTypeProduit(string $type_produit): static
+    {
+        $this->type_produit = $type_produit;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Emprunt>
+     */
+    public function getEmprunts(): Collection
+    {
+        return $this->emprunts;
+    }
+
+    public function addEmprunt(Emprunt $emprunt): static
+    {
+        if (!$this->emprunts->contains($emprunt)) {
+            $this->emprunts->add($emprunt);
+            $emprunt->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEmprunt(Emprunt $emprunt): static
+    {
+        if ($this->emprunts->removeElement($emprunt)) {
+            // set the owning side to null (unless already changed)
+            if ($emprunt->getProduct() === $this) {
+                $emprunt->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function decrementStock(): static
+{
+    if ($this->stock > 0) {
+        $this->stock--;
+    }
+    return $this;
+}
+
+public function incrementStock(): static
+{
+    $this->stock++;
+    return $this;
+}
 }

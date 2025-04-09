@@ -4,9 +4,11 @@ namespace App\Form;
 
 use App\Entity\Product;
 use App\Entity\SubCategory;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DomCrawler\Image;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,6 +26,14 @@ class ProductType extends AbstractType
             ->add('descreption')
             ->add('price' , null , ['label'=>'Prix',])
             ->add('stock')
+            ->add('type_produit', ChoiceType::class, [
+                    'label' => 'Type de produit',
+                    'choices' => [
+                    'À vendre' => 'à vendre',
+                    'À emprunter' => 'à emprunter'
+                    ],
+                    'attr' => ['class' => 'form-select']
+            ])
             ->add('image',FileType::class,[
                 'label'=> 'Image de produit',
                 'mapped'=>false,
@@ -48,6 +58,8 @@ class ProductType extends AbstractType
                 'multiple' => true,
             ]);
     }
+
+    
 
     public function configureOptions(OptionsResolver $resolver): void
     {

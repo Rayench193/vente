@@ -44,6 +44,9 @@
             
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{path('app_user')}}"><i class="fas fa-users me-1"></i> Utilisateurs</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{path('app_emprunt')}}"><i class="fa-solid fa-calendar"></i> Réservation</a></li>
+            <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{path('app_dashboard')}}"><i class="fas fa-chart-line me-1"></i> Tableau de bord</a></li>
           </ul>
         </li>
@@ -69,6 +72,15 @@
           </ul>
         </li>
         {% endif %}
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{path('app_about')}}">
+                <i class="fas fa-info-circle me-1"></i> À propos
+              </a>
+            </li>
+
+            <!-- Dans la navbar, après le menu principal -->
+
       </ul>
       
       <!-- Partie droite (recherche + compte) -->
@@ -111,10 +123,10 @@
             <span class="d-none d-lg-inline">{{ app.user.firstName ?? 'Mon compte' }}</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><h6 class="dropdown-header">Connecté en tant que {{ app.user.email }}</h6></li>
+            <li><h6 class="dropdown-header">Connecté en tant que {{ app.user.firstName }} {{app.user.lastName}} </h6></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{ path('app_my_orders') }}"><i class="fas fa-box-open me-1"></i> Mes commandes</a></li>
-            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-1"></i> Paramètres</a></li>
+            <li><a class="dropdown-item" href="{{ path('app_mes_reservations') }}"><i class="fas fa-calendar"></i> Mes Réservation</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt me-1"></i> Déconnexion</a></li>
           </ul>

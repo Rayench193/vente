@@ -46,49 +46,57 @@
         </li>
         {% endfor %}
       </ul>
-      
-      <!-- Boutons supplémentaires à droite -->
-
     </div>
   </div>
 </nav>
+
 <main class="container py-3">
   <div class="row g-4">
     {% for product in products %}
-  <div class="col-md-6 col-lg-4">
-    <div class="card h-100">
-      <div class="card-body text-center position-relative">
-        <img alt="Book cover" class="book-cover img-fluid rounded" src="{{ asset ('uploads/images/' ~ product.image) }}"/> 
-        <a href="{{path('app_home_product_show', {'id':product.id}) }}">
-          <h4 class="card-title mt-3" style="text-decoration : none;"> {{product.name}} </h4>
-        </a>
-        <p>{{product.auteur}}</p>
-        {% if product.stock > 0 %}
-        <p class="stock">En Stock</p>
-        <p class="price" style="color:black">{{product.price}} TND</p>
-        <a class="btn btn-outline-secondary w-100" href ="{{path('app_cart_new',{'id':product.id})}}">
-          <i class="fas fa-shopping-cart me-2"></i>
-          Ajouter au panier
-        </a>
-        {%else%}
-        <p class="non-stock">Ruptur de stock</p>
-        <p class="price" style="color:black" >{{product.price}} TND</p>
-        <a class="btn btn-outline-secondary w-100" href ="#">
-          <i class="fas fa-shopping-cart me-2"></i>
-          Ajouter au panier
-        </a>
-        {% endif %}
-        
-      
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body text-center position-relative">
+            <img alt="Book cover" class="book-cover img-fluid rounded" src="{{ asset('uploads/images/' ~ product.image) }}"/> 
+            <a href="{{path('app_home_product_show', {'id':product.id}) }}">
+              <h4 class="card-title mt-3" style="text-decoration : none;"> {{product.name}} </h4>
+            </a>
+            <p>{{product.auteur}}</p>
+            
+            {% if product.stock > 0 %}
+              <p class="stock">En Stock</p>
+              <p class="price" style="color:black">{{product.price}} TND</p>
+              
+              {# Use getTypeProduit() instead of type_produit #}
+              {% if product.getTypeProduit() == 'à vendre' %}
+                <a class="btn btn-outline-secondary w-100" href="{{path('app_cart_new',{'id':product.id})}}">
+                  <i class="fas fa-shopping-cart me-2"></i>
+                  Ajouter au panier
+                </a>
+              {% elseif product.getTypeProduit() == 'à emprunter' %}
+                  <a class="btn btn-outline-secondary w-100" href="{{path('app_emprunt_reservation',{'id':product.id})}}">
+                      <i class="fas fa-calendar-check me-2"></i>
+                      Réserver
+                  </a>
+              {% endif %}
+              
+            {% else %}
+              <p class="non-stock">Rupture de stock</p>
+              <p class="price" style="color:black">{{product.price}} TND</p>
+              <button class="btn btn-outline-secondary w-100" disabled>
+                <i class="fas fa-ban me-2"></i>
+                Indisponible
+              </button>
+            {% endif %}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  {% endfor %}
+    {% endfor %}
   </div>
 </main>
 
 
-  {{knp_pagination_render(products, 'layouts/pagination_template.html.twig')}}
+
+{{knp_pagination_render(products, 'layouts/pagination_template.html.twig')}}
 
 
 <footer class="bg-dark text-white pt-5 pb-4">
@@ -179,5 +187,10 @@
     background-color: rgba(255,255,255,0.2);
     text-decoration: none !important;
   }
+
+    
 </style>
+
+
+
 {% endblock %}

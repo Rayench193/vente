@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\EmpruntRepository;
 use App\Repository\OrderProductsRepository;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
@@ -13,11 +14,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
-    public function index(UserRepository $userRepository , ProductRepository $productRepository , OrderRepository $orderRepository , OrderProductsRepository $orderProductsRepository): Response
+    public function index(UserRepository $userRepository , ProductRepository $productRepository , OrderRepository $orderRepository , OrderProductsRepository $orderProductsRepository , EmpruntRepository $empruntRepository): Response
     {
       $userCount = $userRepository->count([]);
       $productCount = $productRepository->count([]);
       $orderCount = $orderRepository->count([]);
+      $empruntCount = $empruntRepository->count([]);
       $mostPurchasedProducts = $orderProductsRepository->findMostPurchasedProducts();
 
       //preparer les données pour le graphique
@@ -36,7 +38,7 @@ final class DashboardController extends AbstractController
         'mostPurchasedProducts' => $mostPurchasedProducts,
         'productNames' => $productNames,
         'productQuantities' => $productQuantities,
-       
+        'empruntCount' =>$empruntCount,
     ]);
     }
 }

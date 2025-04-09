@@ -29,59 +29,61 @@ final class OrderController extends AbstractController
 
 
     #[Route('/order', name: 'app_order')]
-public function index(
+    public function index(
+        Request $request, 
+        ProductRepository $productRepository, 
+        SessionInterface $session, 
+        EntityManagerInterface $entityManager, 
+        Cart $cart
+    ): Response
+    {
+        $data = $cart->getCart($session);
     
-    Request $request, 
-    ProductRepository $productRepository, 
-    SessionInterface $session, 
-    EntityManagerInterface $entityManager, 
-    Cart $cart
-): Response
-{
-    $data = $cart->getCart($session);
-
-    $order = new Order();
-    $form = $this->createForm(OrderType::class, $order);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        if ($order->isPayOnDelivery()) {
-            if (!empty($data['total'])) {
-                $user = $this->getUser();
-                $order->setUser($user);
-
-                $order->setTotalPrice($data['total']);
-                $order->setCreateAt(new \DateTimeImmutable());
-                $entityManager->persist($order);
-                $entityManager->flush();
-
-                foreach ($data['cart'] as $value) {
-                    $orderProduct = new OrderProducts();
-                    $orderProduct->setOrder($order);
-                    $orderProduct->setProduct($value['product']);
-                    $orderProduct->setQte($value['quantity']);
-                    $entityManager->persist($orderProduct);
-
-                    // Décrémenter le stock du produit
-                    $product = $value['product'];
-                    $currentStock = $product->getStock();
-                    $newStock = $currentStock - $value['quantity'];
-                    $product->setStock($newStock);
-                    $entityManager->persist($product);
-                    $entityManager->flush();
-                }
-
-            }
-            $session->set('cart', []);  
-          return $this->redirectToRoute('app_order');
+        // Vérifier si le panier n'est pas vide
+        if (empty($data['cart'])) {
+            $this->addFlash('warning', 'Votre panier est vide.');
+            return $this->redirectToRoute('app_home');
         }
+    
+        $order = new Order();
+        $form = $this->createForm(OrderType::class, $order);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $order->setUser($user);
+            $order->setTotalPrice($data['total']);
+            $order->setCreateAt(new \DateTimeImmutable());
+            
+            $entityManager->persist($order);
+            
+            foreach ($data['cart'] as $value) {
+                $orderProduct = new OrderProducts();
+                $orderProduct->setOrder($order);
+                $orderProduct->setProduct($value['product']);
+                $orderProduct->setQte($value['quantity']);
+                $entityManager->persist($orderProduct);
+    
+                // Décrémenter le stock du produit
+                $product = $value['product'];
+                $currentStock = $product->getStock();
+                $newStock = $currentStock - $value['quantity'];
+                $product->setStock($newStock);
+                $entityManager->persist($product);
+            }
+            
+            $entityManager->flush();
+            $session->set('cart', []);
+            
+            $this->addFlash('success', 'Votre commande a été enregistrée avec succès!');
+            return $this->redirectToRoute('app_my_orders');
+        }
+    
+        return $this->render('order/index.html.twig', [
+            'form' => $form->createView(),
+            'total' => $data['total']
+        ]);
     }
-
-    return $this->render('order/index.html.twig', [
-        'form' => $form->createView(),
-        'total' => $data['total']
-    ]);
-}
 
     #[Route('/city/{id}/shipping/cost', name:'app_city_shipping_cost')]
     public function cityShippingCost(City $city): Response{
@@ -119,10 +121,6 @@ public function index(
     public function showOrder(int $id, OrderRepository $orderRepository): Response
 {
     $order = $orderRepository->find($id);
-
-
-  
-  
     return $this->render('Order/show.html.twig', [
         'order' => $order,
         
@@ -178,7 +176,4 @@ public function addToCart($id, SessionInterface $session): Response
         ]);
     
     }
-
-
-
 }

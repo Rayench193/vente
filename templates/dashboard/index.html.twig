@@ -36,6 +36,15 @@
                 <p class="stat-value">{{ orderCount }}</p>
             </div>
         </div>
+        <div class="stat-card stat-emprunt">
+            <div class="stat-icon">
+                <i class="fas fa-calendar"></i>
+            </div>
+            <div class="stat-content">
+                <h3>Commandes</h3>
+                <p class="stat-value">{{ empruntCount }}</p>
+            </div>
+        </div>
     </div>
 
     <div class="dashboard-section">
@@ -113,6 +122,9 @@
 
 .stat-orders .stat-icon {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+.stat-emprunt .stat-icon {
+    background: linear-gradient(135deg,rgb(231, 220, 60),rgb(228, 118, 106));
 }
 
 .stat-content h3 {

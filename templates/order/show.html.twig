@@ -1,70 +1,136 @@
 {% extends 'base.html.twig' %}
+{% block title %}Détails de commande{% endblock %}
 {% block body %}
-    <div class=container>
-        <h2>Commande n: {{order.id}}</h2>
-        {% if order.isCompleted == true %}
-        <h4 class="text-danger">Commande livreé: {{order.createAt|date}}</h4>
-     {%else%} 
-     <h4 class="text-success">Commande non livreé: {{order.createAt|date}}</h4>
-     {%endif%}
-     <h5>Informations de client </h5>
-        <table class="table table-bordered">
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Téléphone</th>
-                <th>Adresse</th>
-                <th>Ville</th>
-            </tr>
-            <tr>
-                <td>{{order.firstName}}</td>
-                <td>{{order.lastName}}</td>
-                <td>{{order.phone}}</td>
-                <td>{{order.adresse}}</td>
-                <td>{{order.city.name}}</td>
-            </tr>
-        </table>
-        
-        <h5>Corpos de la commande</h5>
-        <table class="table table-bordered">
-            <tr>
-                <th>Image de produit</th>
-                <th>Nom du produits</th>
-                <th>Auteur</th>
-                <th>Prix unitaire</th>
-                <th>Quantité</th>
-                <th>Prix Total</th>
-            </tr>
-            {% for product in order.orderProducts %}
-                <tr>
-
-                    <td> <img src="{{ asset('uploads/images/' ~ product.product.image) }}" style="width:40px;"> </td>
-                    <td>{{product.product.name}}</td>
-                    <td>{{product.product.auteur}}</td>
-                    <td>{{product.product.price}}</td>
-                    <td> {{product.qte}} </td>
-                    <td> {{product.product.price * product.qte}} </td>
-                </tr>
-            {% endfor %}
-        </table>
-        <span>Prix de livraison: {{order.city.shippingCost}}$</span>
-        <h3>Total à payer: {{order.totalPrice +order.city.shippingCost }}$ <br></h3>
-        {% if order.isCompleted == false %}
-        <a href="{{path('app_orders_is_completed_update',{'id':order.id})}}" class="btn btn-outline-primary col-2 m-lg-1">
-            Marquer comme livreé <i class="fa-solid fa-square-arrow-up-right"></i>
-        </a>
-        <a onclick="return confirm('voulez vous vraiment Supprimer cette commande')" href="{{path('app_orders_remove' , {'id':order.id})}}" class="btn btn-outline-danger col-2 m-lg-1">
-            Supprimer <i class="fa-solid fa-trash"></i>
-        </a>
-    {% else %}
-        <a href="{{path('app_bill', {'id':order.id})}}" class="btn btn-outline-success">
-            Imprimer la facture <i class="fa-solid fa-print"></i>
-        </a>
-        <a onclick="return confirm('voulez vous vraiment Supprimer cette commande')" href="{{path('app_orders_remove' , {'id':order.id})}}" class="btn btn-outline-danger col-2 m-lg-1">
-            Supprimer <i class="fa-solid fa-trash"></i>
-        </a>
-        
-{% endif %}
-
+    <div class="container my-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-gradient-primary text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0" style="color:black;"><i class="fas fa-receipt me-2"></i>Commande n°{{order.id}}</h2>
+                    <span class="badge bg-{{order.isCompleted ? 'danger' : 'success'}} rounded-pill p-2">
+                        {{order.isCompleted ? 'Livrée' : 'En cours'}}
+                    </span>
+                </div>
+                <small class="text-white-50">Date: {{order.createAt|date('d/m/Y H:i')}}</small>
+            </div>
+            
+            <div class="card-body">
+                <!-- Section Informations client -->
+                <div class="mb-5">
+                    <h4 class="text-primary mb-4 border-bottom pb-2">
+                        <i class="fas fa-user-circle me-2"></i>Informations du client
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-primary">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">{{order.firstName}} {{order.lastName}}</h5>
+                                    <p class="card-text">
+                                        <i class="fas fa-phone me-2"></i> {{order.phone}}<br>
+                                        <i class="fas fa-map-marker-alt me-2"></i> {{order.adresse}}<br>
+                                        <i class="fas fa-city me-2"></i> {{order.city.name}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-info">
+                                <div class="card-body">
+                                    <h5 class="card-title text-info">Adresse de livraison</h5>
+                                    <p class="card-text">
+                                        <strong>Coût de livraison:</strong> {{order.city.shippingCost}} TND<br>
+                                        <strong>Adresse complète:</strong><br>
+                                        {{order.adresse}}, {{order.city.name}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Produits -->
+                <div class="mb-5">
+                    <h4 class="text-primary mb-4 border-bottom pb-2">
+                        <i class="fas fa-shopping-basket me-2"></i>Détails de la commande
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 80px;">Image</th>
+                                    <th>Produit</th>
+                                    <th>Auteur</th>
+                                    <th class="text-end">Prix unitaire</th>
+                                    <th class="text-center">Quantité</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in order.orderProducts %}
+                                    <tr>
+                                        <td>
+                                            <img src="{{ asset('uploads/images/' ~ product.product.image) }}" 
+                                                 class="img-thumbnail" 
+                                                 style="width:60px; height:80px; object-fit:cover;">
+                                        </td>
+                                        <td class="align-middle">{{product.product.name}}</td>
+                                        <td class="align-middle">{{product.product.auteur}}</td>
+                                        <td class="align-middle text-end">{{product.product.price}}$</td>
+                                        <td class="align-middle text-center">{{product.qte}}</td>
+                                        <td class="align-middle text-end fw-bold">{{product.product.price * product.qte}}$</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Section Total -->
+                <div class="row justify-content-end">
+                    <div class="col-md-5">
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-calculator me-2"></i>Total à payer</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Total produits:</span>
+                                    <strong>{{order.totalPrice}}$</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Frais de livraison:</span>
+                                    <strong>{{order.city.shippingCost}}$</strong>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between fw-bold fs-4 text-success">
+                                    <span>Total général:</span>
+                                    <strong>{{order.totalPrice + order.city.shippingCost}}$</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Boutons d'action -->
+                <div class="d-flex justify-content-end mt-4">
+                    {% if not order.isCompleted %}
+                        <a href="{{path('app_orders_is_completed_update',{'id':order.id})}}" 
+                           class="btn btn-success me-2">
+                            <i class="fas fa-check-circle me-2"></i>Marquer comme livrée
+                        </a>
+                    {% else %}
+                        <a href="{{path('app_bill', {'id':order.id})}}" 
+                           class="btn btn-primary me-2">
+                            <i class="fas fa-print me-2"></i>Imprimer la facture
+                        </a>
+                    {% endif %}
+                    
+                    <a onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')" 
+                       href="{{path('app_orders_remove' , {'id':order.id})}}" 
+                       class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-2"></i>Supprimer
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
